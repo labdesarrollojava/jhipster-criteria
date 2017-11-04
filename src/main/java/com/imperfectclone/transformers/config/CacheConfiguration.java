@@ -41,6 +41,7 @@ public class CacheConfiguration {
             cm.createCache(com.imperfectclone.transformers.domain.User.class.getName(), jcacheConfiguration);
             cm.createCache(com.imperfectclone.transformers.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(com.imperfectclone.transformers.domain.User.class.getName() + ".authorities", jcacheConfiguration);
+            cm.createCache(com.imperfectclone.transformers.domain.Transformer.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

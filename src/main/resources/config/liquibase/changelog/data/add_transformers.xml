@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
+
+    <!--
+        Insert rows
+    -->
+    <changeSet id="10000000000000-1" author="imperfectclone">
+        <insert tableName="transformer">
+            <column name="id" valueComputed="nextval('hibernate_sequence')" />
+            <column name="name">Optimus</column>
+            <column name="power">10</column>
+        </insert>
+        <insert tableName="transformer">
+            <column name="id" valueComputed="nextval('hibernate_sequence')" />
+            <column name="name">Megatron</column>
+            <column name="power">10</column>
+        </insert>
+        <insert tableName="transformer">
+            <column name="id" valueComputed="nextval('hibernate_sequence')" />
+            <column name="name">Hot Rod</column>
+            <column name="power">7</column>
+        </insert>
+        <insert tableName="transformer">
+            <column name="id" valueComputed="nextval('hibernate_sequence')" />
+            <column name="name">Wheeljack</column>
+            <column name="power">8</column>
+        </insert>
+        <insert tableName="transformer">
+            <column name="id" valueComputed="nextval('hibernate_sequence')" />
+            <column name="name">Starscream</column>
+            <column name="power">7</column>
+        </insert>
+        <insert tableName="transformer">
+            <column name="id" valueComputed="nextval('hibernate_sequence')" />
+            <column name="name">Soundwave</column>
+            <column name="power">7</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
