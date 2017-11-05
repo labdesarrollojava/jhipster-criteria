@@ -1,5 +1,24 @@
 # Transformers
 
+This JHipster application was created to test the filtering capability of the current version of [JHipster](http://www.jhipster.tech/).
+
+It is a simple monolith with a single `Transformer` entity (in the sense of [Robots in Disguise](https://en.wikipedia.org/wiki/Transformers)).
+
+The project includes Liquibase which (with the dev profile) will populate an in-memory H2 instance with some 
+Transformers.
+
+The `Transformer` entity has `name` and `power` attributes.
+
+Fields to filter these have been added to `transformer.component`.
+
+The `createRequestOption(req)` function in `request-utils.ts` has been modified to expect an array of `criteria` 
+key-value pairs, which are appended to its `URLSearchParams` instance.
+
+
+# Auto-generated docs
+
+What follows is the documentation automatically created by `generator-jhipster`.
+
 This application was generated using JHipster 4.10.2, you can find documentation and help at [http://www.jhipster.tech/documentation-archive/v4.10.2](http://www.jhipster.tech/documentation-archive/v4.10.2).
 
 ## Development
