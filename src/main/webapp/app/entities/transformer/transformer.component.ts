@@ -27,6 +27,7 @@ currentAccount: any;
     predicate: any;
     previousPage: any;
     reverse: any;
+    criteria: any;
 
     constructor(
         private transformerService: TransformerService,
@@ -44,23 +45,50 @@ currentAccount: any;
             this.reverse = data['pagingParams'].ascending;
             this.predicate = data['pagingParams'].predicate;
         });
+        this.criteria = {
+            name: null,
+            power: null,
+            areSet() {
+                return this.name != null || this.power != null
+            },
+            clear() {
+                this.name = null;
+                this.power = null;
+            }
+        }
     }
 
     loadAll() {
+
+        const criteria = [];
+
+        if (this.criteria.areSet()) {
+            if (this.criteria.name != null && this.criteria.name !== '') {
+                criteria.push({key: 'name.equals', value: this.criteria.name});
+            }
+            if (this.criteria.power != null && this.criteria.power >= 0) {
+                criteria.push({key: 'power.equals', value: this.criteria.power});
+            }
+        }
+
         this.transformerService.query({
             page: this.page - 1,
             size: this.itemsPerPage,
-            sort: this.sort()}).subscribe(
+            sort: this.sort(),
+            criteria
+        }).subscribe(
             (res: ResponseWrapper) => this.onSuccess(res.json, res.headers),
             (res: ResponseWrapper) => this.onError(res.json)
         );
     }
+
     loadPage(page: number) {
         if (page !== this.previousPage) {
             this.previousPage = page;
             this.transition();
         }
     }
+
     transition() {
         this.router.navigate(['/transformer'], {queryParams:
             {
@@ -78,8 +106,10 @@ currentAccount: any;
             page: this.page,
             sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
         }]);
+        this.criteria.clear();
         this.loadAll();
     }
+
     ngOnInit() {
         this.loadAll();
         this.principal.identity().then((account) => {
@@ -95,6 +125,7 @@ currentAccount: any;
     trackId(index: number, item: Transformer) {
         return item.id;
     }
+
     registerChangeInTransformers() {
         this.eventSubscriber = this.eventManager.subscribe('transformerListModification', (response) => this.loadAll());
     }
@@ -107,6 +138,12 @@ currentAccount: any;
         return result;
     }
 
+    search(criteria) {
+        if (criteria.areSet()) {
+            this.loadAll();
+        }
+    }
+
     private onSuccess(data, headers) {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = headers.get('X-Total-Count');
@@ -114,6 +151,7 @@ currentAccount: any;
         // this.page = pagingParams.page;
         this.transformers = data;
     }
+
     private onError(error) {
         this.jhiAlertService.error(error.message, null, null);
     }
