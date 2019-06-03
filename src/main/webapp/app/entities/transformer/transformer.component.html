@@ -1,70 +1,50 @@
 <div>
-    <h2>
+    <h2 id="page-heading">
         <span jhiTranslate="transformersApp.transformer.home.title">Transformers</span>
-        <button class="btn btn-primary float-right jh-create-entity create-transformer" [routerLink]="['/', { outlets: { popup: ['transformer-new'] } }]">
-            <span class="fa fa-plus"></span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-transformer" [routerLink]="['/transformer/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
             <span  jhiTranslate="transformersApp.transformer.home.createLabel">
             Create new Transformer
             </span>
         </button>
     </h2>
     <jhi-alert></jhi-alert>
-    <div class="row">
-        <div class="col-sm-12">
-            <form name="searchForm" class="form-inline">
-                <div class="input-group w-100 mt-3">
-                    <input type="text" class="form-control"
-                           [(ngModel)]="criteria.name" id="nameEquals" name="nameEquals"
-                           placeholder="{{ 'transformersApp.transformer.search.name' | translate }}">
-                    <input type="text" class="form-control"
-                           [(ngModel)]="criteria.power" id="powerEquals" name="powerEquals"
-                           placeholder="{{ 'transformersApp.transformer.search.power' | translate }}">
-                    <button class="input-group-addon btn btn-info" (click)="search(criteria)">
-                        <span class="fa fa-search"></span>
-                    </button>
-                    <button class="input-group-addon btn btn-danger" (click)="clear(criteria)" *ngIf="criteria.areSet()">
-                        <span class="fa fa-trash-o"></span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    </br>
+    <br/>
     <div class="table-responsive" *ngIf="transformers">
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="name"><span jhiTranslate="transformersApp.transformer.name">Name</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="power"><span jhiTranslate="transformersApp.transformer.power">Power</span> <span class="fa fa-sort"></span></th>
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="name"><span jhiTranslate="transformersApp.transformer.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="power"><span jhiTranslate="transformersApp.transformer.power">Power</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let transformer of transformers ;trackBy: trackId">
-                <td><a [routerLink]="['../transformer', transformer.id ]">{{transformer.id}}</a></td>
+                <td><a [routerLink]="['/transformer', transformer.id, 'view' ]">{{transformer.id}}</a></td>
                 <td>{{transformer.name}}</td>
                 <td>{{transformer.power}}</td>
                 <td class="text-right">
-                    <div class="btn-group flex-btn-group-container">
+                    <div class="btn-group">
                         <button type="submit"
-                                [routerLink]="['../transformer', transformer.id ]"
+                                [routerLink]="['/transformer', transformer.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <span class="fa fa-eye"></span>
+                            <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'transformer/'+ transformer.id + '/edit'} }]"
-                                replaceUrl="true"
+                                [routerLink]="['/transformer', transformer.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <span class="fa fa-pencil"></span>
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/', { outlets: { popup: 'transformer/'+ transformer.id + '/delete'} }]"
+                                [routerLink]="['/', 'transformer', { outlets: { popup: transformer.id + '/delete'} }]"
                                 replaceUrl="true"
+                                queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <span class="fa fa-remove"></span>
+                            <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                         </button>
                     </div>
@@ -73,12 +53,12 @@
             </tbody>
         </table>
     </div>
-        <div *ngIf="transformers && transformers.length">
-            <div class="row justify-content-center">
-                <jhi-item-count [page]="page" [total]="queryCount" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
-            </div>
-            <div class="row justify-content-center">
-                <ngb-pagination [collectionSize]="totalItems" [maxSize]="5" [pageSize]="itemsPerPage" [(page)]="page" (pageChange)="loadPage(page)"></ngb-pagination>
-            </div>
+    <div *ngIf="transformers && transformers.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
         </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
 </div>

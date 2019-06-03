@@ -1,26 +1,22 @@
 {
-    "transformersApp": {
-        "transformer" : {
-            "home": {
-                "title": "Transformers",
-                "createLabel": "Create a new Transformer",
-                "createOrEditLabel": "Create or edit a Transformer"
-            },
-            "created": "A new Transformer is created with identifier {{ param }}",
-            "updated": "A Transformer is updated with identifier {{ param }}",
-            "deleted": "A Transformer is deleted with identifier {{ param }}",
-            "delete": {
-                "question": "Are you sure you want to delete Transformer {{ id }}?"
-            },
-            "detail": {
-                "title": "Transformer"
-            },
-            "name": "Name",
-            "power": "Power",
-            "search": {
-                "name": "Search on name",
-                "power": "Search on power"
-            }
-        }
+  "transformersApp": {
+    "transformer": {
+      "home": {
+        "title": "Transformers",
+        "createLabel": "Create a new Transformer",
+        "createOrEditLabel": "Create or edit a Transformer"
+      },
+      "created": "A new Transformer is created with identifier {{ param }}",
+      "updated": "A Transformer is updated with identifier {{ param }}",
+      "deleted": "A Transformer is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Transformer {{ id }}?"
+      },
+      "detail": {
+        "title": "Transformer"
+      },
+      "name": "Name",
+      "power": "Power"
     }
+  }
 }

@@ -1,61 +1,40 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { DatePipe } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Rx';
-import { JhiDateUtils, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { of } from 'rxjs';
+
 import { TransformersTestModule } from '../../../test.module';
-import { MockActivatedRoute } from '../../../helpers/mock-route.service';
-import { TransformerDetailComponent } from '../../../../../../main/webapp/app/entities/transformer/transformer-detail.component';
-import { TransformerService } from '../../../../../../main/webapp/app/entities/transformer/transformer.service';
-import { Transformer } from '../../../../../../main/webapp/app/entities/transformer/transformer.model';
+import { TransformerDetailComponent } from 'app/entities/transformer/transformer-detail.component';
+import { Transformer } from 'app/shared/model/transformer.model';
 
 describe('Component Tests', () => {
+  describe('Transformer Management Detail Component', () => {
+    let comp: TransformerDetailComponent;
+    let fixture: ComponentFixture<TransformerDetailComponent>;
+    const route = ({ data: of({ transformer: new Transformer(123) }) } as any) as ActivatedRoute;
 
-    describe('Transformer Management Detail Component', () => {
-        let comp: TransformerDetailComponent;
-        let fixture: ComponentFixture<TransformerDetailComponent>;
-        let service: TransformerService;
-
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                imports: [TransformersTestModule],
-                declarations: [TransformerDetailComponent],
-                providers: [
-                    JhiDateUtils,
-                    JhiDataUtils,
-                    DatePipe,
-                    {
-                        provide: ActivatedRoute,
-                        useValue: new MockActivatedRoute({id: 123})
-                    },
-                    TransformerService,
-                    JhiEventManager
-                ]
-            }).overrideTemplate(TransformerDetailComponent, '')
-            .compileComponents();
-        }));
-
-        beforeEach(() => {
-            fixture = TestBed.createComponent(TransformerDetailComponent);
-            comp = fixture.componentInstance;
-            service = fixture.debugElement.injector.get(TransformerService);
-        });
-
-        describe('OnInit', () => {
-            it('Should call load all on init', () => {
-            // GIVEN
-
-            spyOn(service, 'find').and.returnValue(Observable.of(new Transformer(10)));
-
-            // WHEN
-            comp.ngOnInit();
-
-            // THEN
-            expect(service.find).toHaveBeenCalledWith(123);
-            expect(comp.transformer).toEqual(jasmine.objectContaining({id: 10}));
-            });
-        });
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [TransformersTestModule],
+        declarations: [TransformerDetailComponent],
+        providers: [{ provide: ActivatedRoute, useValue: route }]
+      })
+        .overrideTemplate(TransformerDetailComponent, '')
+        .compileComponents();
+      fixture = TestBed.createComponent(TransformerDetailComponent);
+      comp = fixture.componentInstance;
     });
 
+    describe('OnInit', () => {
+      it('Should call load all on init', () => {
+        // GIVEN
+
+        // WHEN
+        comp.ngOnInit();
+
+        // THEN
+        expect(comp.transformer).toEqual(jasmine.objectContaining({ id: 123 }));
+      });
+    });
+  });
 });

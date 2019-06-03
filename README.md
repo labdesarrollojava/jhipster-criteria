@@ -1,25 +1,6 @@
-# Transformers
+# transformers
 
-This JHipster application was created to test the filtering capability of the current version of [JHipster](http://www.jhipster.tech/).
-
-It is a simple monolith with a single `Transformer` entity (in the sense of [Robots in Disguise](https://en.wikipedia.org/wiki/Transformers)).
-
-The project includes Liquibase which (with the dev profile) will populate an in-memory H2 instance with some 
-Transformers.
-
-The `Transformer` entity has `name` and `power` attributes.
-
-Fields to filter these have been added to `transformer.component`.
-
-The `createRequestOption(req)` function in `request-utils.ts` has been modified to expect an array of `criteria` 
-key-value pairs, which are appended to its `URLSearchParams` instance.
-
-
-# Auto-generated docs
-
-What follows is the documentation automatically created by `generator-jhipster`.
-
-This application was generated using JHipster 4.10.2, you can find documentation and help at [http://www.jhipster.tech/documentation-archive/v4.10.2](http://www.jhipster.tech/documentation-archive/v4.10.2).
+This application was generated using JHipster 6.0.1, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.0.1](https://www.jhipster.tech/documentation-archive/v6.0.1).
 
 ## Development
 
@@ -37,14 +18,13 @@ You will only need to run this command when dependencies change in [package.json
 
 We use yarn scripts and [Webpack][] as our build system.
 
-
 Run the following commands in two separate terminals to create a blissful development experience where your browser
 auto-refreshes when files change on your hard drive.
 
     ./mvnw
     yarn start
 
-[Yarn][] is also used to manage CSS and JavaScript dependencies used in this application. You can upgrade dependencies by
+Yarn is also used to manage CSS and JavaScript dependencies used in this application. You can upgrade dependencies by
 specifying a newer version in [package.json](package.json). You can also run `yarn update` and `yarn install` to manage dependencies.
 Add the `help` flag on any command to see how you can use it. For example, `yarn help update`.
 
@@ -54,21 +34,19 @@ The `yarn run` command will list all of the scripts available to run for this pr
 
 Service workers are commented by default, to enable them please uncomment the following code.
 
-* The service worker registering script in index.html
-```
+- The service worker registering script in index.html
+
+```html
 <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker
-        .register('./sw.js')
-        .then(function() { console.log('Service Worker Registered'); });
-    }
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js').then(function() {
+      console.log('Service Worker Registered');
+    });
+  }
 </script>
 ```
-* The copy file option in webpack-common.js
-```js
-{ from: './src/main/webapp/sw.js', to: 'sw.js' },
-```
-Note: Add the respective scripts/assets in `sw.js` that is needed to be cached.
+
+Note: workbox creates the respective service worker and dynamically generate the `service-worker.js`
 
 ### Managing dependencies
 
@@ -81,16 +59,17 @@ To benefit from TypeScript type definitions from [DefinitelyTyped][] repository 
     yarn add --dev --exact @types/leaflet
 
 Then you would import the JS and CSS files specified in library's installation instructions so that [Webpack][] knows about them:
-
 Edit [src/main/webapp/app/vendor.ts](src/main/webapp/app/vendor.ts) file:
-~~~
+
+```
 import 'leaflet/dist/leaflet.js';
-~~~
+```
 
 Edit [src/main/webapp/content/css/vendor.css](src/main/webapp/content/css/vendor.css) file:
-~~~
+
+```
 @import '~leaflet/dist/leaflet.css';
-~~~
+```
 
 Note: there are still few other things remaining to do for Leaflet that we won't detail here.
 
@@ -110,47 +89,73 @@ will generate few files:
     create src/main/webapp/app/my-component/my-component.component.ts
     update src/main/webapp/app/app.module.ts
 
-
 ## Building for production
 
-To optimize the transformers application for production, run:
+### Packaging as jar
 
-    ./mvnw -Pprod clean package
+To build the final jar and optimize the transformers application for production, run:
+
+    ./mvnw -Pprod clean verify
 
 This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
 To ensure everything worked, run:
 
-    java -jar target/*.war
+    java -jar target/*.jar
 
 Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
 
 Refer to [Using JHipster in production][] for more details.
 
+### Packaging as war
+
+To package your application as a war in order to deploy it to an application server, run:
+
+    ./mvnw -Pprod,war clean verify
+
 ## Testing
 
 To launch your application's tests, run:
 
-    ./mvnw clean test
+    ./mvnw verify
 
 ### Client tests
 
-Unit tests are run by [Karma][] and written with [Jasmine][]. They're located in [src/test/javascript/](src/test/javascript/) and can be run with:
+Unit tests are run by [Jest][] and written with [Jasmine][]. They're located in [src/test/javascript/](src/test/javascript/) and can be run with:
 
     yarn test
 
-UI end-to-end tests are powered by [Protractor][], which is built on top of WebDriverJS. They're located in [src/test/javascript/e2e](src/test/javascript/e2e)
-and can be run by starting Spring Boot in one terminal (`./mvnw spring-boot:run`) and running the tests (`yarn run e2e`) in a second one.
-### Other tests
-
-Performance tests are run by [Gatling][] and written in Scala. They're located in [src/test/gatling](src/test/gatling) and can be run with:
-
-    ./mvnw gatling:execute
-
 For more information, refer to the [Running tests page][].
+
+### Code quality
+
+Sonar is used to analyse code quality. You can start a local Sonar server (accessible on http://localhost:9001) with:
+
+```
+docker-compose -f src/main/docker/sonar.yml up -d
+```
+
+You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) or by using the maven plugin.
+
+Then, run a Sonar analysis:
+
+```
+./mvnw -Pprod clean verify sonar:sonar
+```
+
+If you need to re-run the Sonar phase, please be sure to specify at least the `initialize` phase since Sonar properties are loaded from the sonar-project.properties file.
+
+```
+./mvnw initialize sonar:sonar
+```
+
+or
+
+For more information, refer to the [Code quality page][].
 
 ## Using Docker to simplify development (optional)
 
 You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
+
 For example, to start a postgresql database in a docker container, run:
 
     docker-compose -f src/main/docker/postgresql.yml up -d
@@ -162,7 +167,7 @@ To stop it and remove the container, run:
 You can also fully dockerize your application and all the services that it depends on.
 To achieve this, first build a docker image of your app by running:
 
-    ./mvnw package -Pprod dockerfile:build
+    ./mvnw -Pprod verify jib:dockerBuild
 
 Then run:
 
@@ -174,23 +179,21 @@ For more information refer to [Using Docker and Docker-Compose][], this page als
 
 To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
-[JHipster Homepage and latest documentation]: http://www.jhipster.tech
-[JHipster 4.10.2 archive]: http://www.jhipster.tech/documentation-archive/v4.10.2
-
-[Using JHipster in development]: http://www.jhipster.tech/documentation-archive/v4.10.2/development/
-[Using Docker and Docker-Compose]: http://www.jhipster.tech/documentation-archive/v4.10.2/docker-compose
-[Using JHipster in production]: http://www.jhipster.tech/documentation-archive/v4.10.2/production/
-[Running tests page]: http://www.jhipster.tech/documentation-archive/v4.10.2/running-tests/
-[Setting up Continuous Integration]: http://www.jhipster.tech/documentation-archive/v4.10.2/setting-up-ci/
-
-[Gatling]: http://gatling.io/
-[Node.js]: https://nodejs.org/
-[Yarn]: https://yarnpkg.org/
-[Webpack]: https://webpack.github.io/
-[Angular CLI]: https://cli.angular.io/
-[BrowserSync]: http://www.browsersync.io/
-[Karma]: http://karma-runner.github.io/
-[Jasmine]: http://jasmine.github.io/2.0/introduction.html
-[Protractor]: https://angular.github.io/protractor/
-[Leaflet]: http://leafletjs.com/
-[DefinitelyTyped]: http://definitelytyped.org/
+[jhipster homepage and latest documentation]: https://www.jhipster.tech
+[jhipster 6.0.1 archive]: https://www.jhipster.tech/documentation-archive/v6.0.1
+[using jhipster in development]: https://www.jhipster.tech/documentation-archive/v6.0.1/development/
+[using docker and docker-compose]: https://www.jhipster.tech/documentation-archive/v6.0.1/docker-compose
+[using jhipster in production]: https://www.jhipster.tech/documentation-archive/v6.0.1/production/
+[running tests page]: https://www.jhipster.tech/documentation-archive/v6.0.1/running-tests/
+[code quality page]: https://www.jhipster.tech/documentation-archive/v6.0.1/code-quality/
+[setting up continuous integration]: https://www.jhipster.tech/documentation-archive/v6.0.1/setting-up-ci/
+[node.js]: https://nodejs.org/
+[yarn]: https://yarnpkg.org/
+[webpack]: https://webpack.github.io/
+[angular cli]: https://cli.angular.io/
+[browsersync]: http://www.browsersync.io/
+[jest]: https://facebook.github.io/jest/
+[jasmine]: http://jasmine.github.io/2.0/introduction.html
+[protractor]: https://angular.github.io/protractor/
+[leaflet]: http://leafletjs.com/
+[definitelytyped]: http://definitelytyped.org/

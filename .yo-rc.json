@@ -4,7 +4,7 @@
       "packageName": "com.imperfectclone.transformers",
       "nativeLanguage": "en"
     },
-    "jhipsterVersion": "4.10.2",
+    "jhipsterVersion": "6.0.1",
     "baseName": "transformers",
     "packageName": "com.imperfectclone.transformers",
     "packageFolder": "com/imperfectclone/transformers",
@@ -24,18 +24,19 @@
     "enableSwaggerCodegen": false,
     "jwtSecretKey": "22472593f24ee393fffd1f8bac530d748a4e0eae",
     "clientFramework": "angularX",
-    "useSass": false,
+    "useSass": true,
     "clientPackageManager": "yarn",
     "applicationType": "monolith",
-    "testFrameworks": [
-      "gatling",
-      "protractor"
-    ],
+    "testFrameworks": ["gatling", "protractor"],
     "jhiPrefix": "jhi",
     "enableTranslation": true,
     "nativeLanguage": "en",
-    "languages": [
-      "en"
-    ]
+    "languages": ["en"],
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "clientTheme": "none",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": []
   }
 }

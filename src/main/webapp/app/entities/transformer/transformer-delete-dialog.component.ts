@@ -1,64 +1,69 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Transformer } from './transformer.model';
-import { TransformerPopupService } from './transformer-popup.service';
+import { ITransformer } from 'app/shared/model/transformer.model';
 import { TransformerService } from './transformer.service';
 
 @Component({
-    selector: 'jhi-transformer-delete-dialog',
-    templateUrl: './transformer-delete-dialog.component.html'
+  selector: 'jhi-transformer-delete-dialog',
+  templateUrl: './transformer-delete-dialog.component.html'
 })
 export class TransformerDeleteDialogComponent {
+  transformer: ITransformer;
 
-    transformer: Transformer;
+  constructor(
+    protected transformerService: TransformerService,
+    public activeModal: NgbActiveModal,
+    protected eventManager: JhiEventManager
+  ) {}
 
-    constructor(
-        private transformerService: TransformerService,
-        public activeModal: NgbActiveModal,
-        private eventManager: JhiEventManager
-    ) {
-    }
+  clear() {
+    this.activeModal.dismiss('cancel');
+  }
 
-    clear() {
-        this.activeModal.dismiss('cancel');
-    }
-
-    confirmDelete(id: number) {
-        this.transformerService.delete(id).subscribe((response) => {
-            this.eventManager.broadcast({
-                name: 'transformerListModification',
-                content: 'Deleted an transformer'
-            });
-            this.activeModal.dismiss(true);
-        });
-    }
+  confirmDelete(id: number) {
+    this.transformerService.delete(id).subscribe(response => {
+      this.eventManager.broadcast({
+        name: 'transformerListModification',
+        content: 'Deleted an transformer'
+      });
+      this.activeModal.dismiss(true);
+    });
+  }
 }
 
 @Component({
-    selector: 'jhi-transformer-delete-popup',
-    template: ''
+  selector: 'jhi-transformer-delete-popup',
+  template: ''
 })
 export class TransformerDeletePopupComponent implements OnInit, OnDestroy {
+  protected ngbModalRef: NgbModalRef;
 
-    routeSub: any;
+  constructor(protected activatedRoute: ActivatedRoute, protected router: Router, protected modalService: NgbModal) {}
 
-    constructor(
-        private route: ActivatedRoute,
-        private transformerPopupService: TransformerPopupService
-    ) {}
+  ngOnInit() {
+    this.activatedRoute.data.subscribe(({ transformer }) => {
+      setTimeout(() => {
+        this.ngbModalRef = this.modalService.open(TransformerDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
+        this.ngbModalRef.componentInstance.transformer = transformer;
+        this.ngbModalRef.result.then(
+          result => {
+            this.router.navigate(['/transformer', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          },
+          reason => {
+            this.router.navigate(['/transformer', { outlets: { popup: null } }]);
+            this.ngbModalRef = null;
+          }
+        );
+      }, 0);
+    });
+  }
 
-    ngOnInit() {
-        this.routeSub = this.route.params.subscribe((params) => {
-            this.transformerPopupService
-                .open(TransformerDeleteDialogComponent as Component, params['id']);
-        });
-    }
-
-    ngOnDestroy() {
-        this.routeSub.unsubscribe();
-    }
+  ngOnDestroy() {
+    this.ngbModalRef = null;
+  }
 }

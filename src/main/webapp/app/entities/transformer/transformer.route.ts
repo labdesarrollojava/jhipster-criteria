@@ -1,82 +1,98 @@
 import { Injectable } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
-
-import { UserRouteAccessService } from '../../shared';
-import { JhiPaginationUtil } from 'ng-jhipster';
-
+import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
+import { UserRouteAccessService } from 'app/core';
+import { Observable, of } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { Transformer } from 'app/shared/model/transformer.model';
+import { TransformerService } from './transformer.service';
 import { TransformerComponent } from './transformer.component';
 import { TransformerDetailComponent } from './transformer-detail.component';
-import { TransformerPopupComponent } from './transformer-dialog.component';
+import { TransformerUpdateComponent } from './transformer-update.component';
 import { TransformerDeletePopupComponent } from './transformer-delete-dialog.component';
+import { ITransformer } from 'app/shared/model/transformer.model';
 
-@Injectable()
-export class TransformerResolvePagingParams implements Resolve<any> {
+@Injectable({ providedIn: 'root' })
+export class TransformerResolve implements Resolve<ITransformer> {
+  constructor(private service: TransformerService) {}
 
-    constructor(private paginationUtil: JhiPaginationUtil) {}
-
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const page = route.queryParams['page'] ? route.queryParams['page'] : '1';
-        const sort = route.queryParams['sort'] ? route.queryParams['sort'] : 'id,asc';
-        return {
-            page: this.paginationUtil.parsePage(page),
-            predicate: this.paginationUtil.parsePredicate(sort),
-            ascending: this.paginationUtil.parseAscending(sort)
-      };
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ITransformer> {
+    const id = route.params['id'] ? route.params['id'] : null;
+    if (id) {
+      return this.service.find(id).pipe(
+        filter((response: HttpResponse<Transformer>) => response.ok),
+        map((transformer: HttpResponse<Transformer>) => transformer.body)
+      );
     }
+    return of(new Transformer());
+  }
 }
 
 export const transformerRoute: Routes = [
-    {
-        path: 'transformer',
-        component: TransformerComponent,
-        resolve: {
-            'pagingParams': TransformerResolvePagingParams
-        },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'transformersApp.transformer.home.title'
-        },
-        canActivate: [UserRouteAccessService]
-    }, {
-        path: 'transformer/:id',
-        component: TransformerDetailComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'transformersApp.transformer.home.title'
-        },
-        canActivate: [UserRouteAccessService]
-    }
+  {
+    path: '',
+    component: TransformerComponent,
+    resolve: {
+      pagingParams: JhiResolvePagingParams
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      defaultSort: 'id,asc',
+      pageTitle: 'transformersApp.transformer.home.title'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/view',
+    component: TransformerDetailComponent,
+    resolve: {
+      transformer: TransformerResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'transformersApp.transformer.home.title'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'new',
+    component: TransformerUpdateComponent,
+    resolve: {
+      transformer: TransformerResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'transformersApp.transformer.home.title'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: ':id/edit',
+    component: TransformerUpdateComponent,
+    resolve: {
+      transformer: TransformerResolve
+    },
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'transformersApp.transformer.home.title'
+    },
+    canActivate: [UserRouteAccessService]
+  }
 ];
 
 export const transformerPopupRoute: Routes = [
-    {
-        path: 'transformer-new',
-        component: TransformerPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'transformersApp.transformer.home.title'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
+  {
+    path: ':id/delete',
+    component: TransformerDeletePopupComponent,
+    resolve: {
+      transformer: TransformerResolve
     },
-    {
-        path: 'transformer/:id/edit',
-        component: TransformerPopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'transformersApp.transformer.home.title'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
+    data: {
+      authorities: ['ROLE_USER'],
+      pageTitle: 'transformersApp.transformer.home.title'
     },
-    {
-        path: 'transformer/:id/delete',
-        component: TransformerDeletePopupComponent,
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'transformersApp.transformer.home.title'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    }
+    canActivate: [UserRouteAccessService],
+    outlet: 'popup'
+  }
 ];
