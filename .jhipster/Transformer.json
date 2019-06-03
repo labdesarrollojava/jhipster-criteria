@@ -1,0 +1,30 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength"
+            ],
+            "fieldValidateRulesMinlength": "3"
+        },
+        {
+            "fieldName": "power",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        }
+    ],
+    "changelogDate": "20171104233034",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "transformer",
+    "jpaMetamodelFiltering": true,
+    "pagination": "pagination"
+}
