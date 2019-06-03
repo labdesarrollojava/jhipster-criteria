@@ -1,29 +1,31 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="transformer">
+            <h2><span jhiTranslate="transformersApp.transformer.detail.title">Transformer</span> {{transformer.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="transformersApp.transformer.name">Name</span></dt>
+                <dd>
+                    <span>{{transformer.name}}</span>
+                </dd>
+                <dt><span jhiTranslate="transformersApp.transformer.power">Power</span></dt>
+                <dd>
+                    <span>{{transformer.power}}</span>
+                </dd>
+            </dl>
 
-<div *ngIf="transformer">
-    <h2><span jhiTranslate="transformersApp.transformer.detail.title">Transformer</span> {{transformer.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="row-md jh-entity-details">
-        <dt><span jhiTranslate="transformersApp.transformer.name">Name</span></dt>
-        <dd>
-            <span>{{transformer.name}}</span>
-        </dd>
-        <dt><span jhiTranslate="transformersApp.transformer.power">Power</span></dt>
-        <dd>
-            <span>{{transformer.power}}</span>
-        </dd>
-    </dl>
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
 
-    <button type="submit"
-            (click)="previousState()"
-            class="btn btn-info">
-        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
-    </button>
-
-    <button type="button"
-            [routerLink]="['/', { outlets: { popup: 'transformer/'+ transformer.id + '/edit'} }]"
-            replaceUrl="true"
-            class="btn btn-primary">
-        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
+            <button type="button"
+                    [routerLink]="['/transformer', transformer.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
 </div>
