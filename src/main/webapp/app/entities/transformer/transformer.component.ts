@@ -24,12 +24,13 @@ export class TransformerComponent implements OnInit, OnDestroy {
   routeData: any;
   links: any;
   totalItems: any;
+  queryCount: any;
   itemsPerPage: any;
   page: any;
   predicate: any;
   previousPage: any;
   reverse: any;
-
+  criteria: any;
   constructor(
     protected transformerService: TransformerService,
     protected parseLinks: JhiParseLinks,
@@ -46,14 +47,37 @@ export class TransformerComponent implements OnInit, OnDestroy {
       this.reverse = data.pagingParams.ascending;
       this.predicate = data.pagingParams.predicate;
     });
+    this.criteria = {
+      name: null,
+      power: null,
+      areSet() {
+        return this.name != null || this.power != null;
+      },
+      clear() {
+        this.name = null;
+        this.power = null;
+      }
+    };
   }
 
   loadAll() {
+    const criteria = [];
+
+    if (this.criteria.areSet()) {
+      if (this.criteria.name != null && this.criteria.name !== '') {
+        criteria.push({ key: 'name.equals', value: this.criteria.name });
+      }
+      if (this.criteria.power != null && this.criteria.power >= 0) {
+        criteria.push({ key: 'power.equals', value: this.criteria.power });
+      }
+    }
+
     this.transformerService
       .query({
         page: this.page - 1,
         size: this.itemsPerPage,
-        sort: this.sort()
+        sort: this.sort(),
+        criteria
       })
       .subscribe(
         (res: HttpResponse<ITransformer[]>) => this.paginateTransformers(res.body, res.headers),
@@ -88,9 +112,9 @@ export class TransformerComponent implements OnInit, OnDestroy {
         sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
       }
     ]);
+    this.criteria.clear();
     this.loadAll();
   }
-
   ngOnInit() {
     this.loadAll();
     this.accountService.identity().then(account => {
@@ -117,6 +141,20 @@ export class TransformerComponent implements OnInit, OnDestroy {
       result.push('id');
     }
     return result;
+  }
+
+  search(criteria) {
+    if (criteria.areSet()) {
+      this.loadAll();
+    }
+  }
+
+  protected onSuccess(data, headers) {
+    this.links = this.parseLinks.parse(headers.get('link'));
+    this.totalItems = headers.get('X-Total-Count');
+    this.queryCount = this.totalItems;
+    // this.page = pagingParams.page;
+    this.transformers = data;
   }
 
   protected paginateTransformers(data: ITransformer[], headers: HttpHeaders) {

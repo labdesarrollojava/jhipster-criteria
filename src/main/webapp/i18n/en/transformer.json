@@ -16,7 +16,11 @@
         "title": "Transformer"
       },
       "name": "Name",
-      "power": "Power"
+      "power": "Power",
+      "search": {
+        "name": "Search on name",
+        "power": "Search on power"
+      }
     }
   }
 }

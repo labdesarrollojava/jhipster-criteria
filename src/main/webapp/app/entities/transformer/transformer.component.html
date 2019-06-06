@@ -9,6 +9,28 @@
         </button>
     </h2>
     <jhi-alert></jhi-alert>
+   
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control"
+                           [(ngModel)]="criteria.name" id="nameEquals" name="nameEquals"
+                           placeholder="{{ 'transformersApp.transformer.search.name' | translate }}">
+                    <input type="text" class="form-control"
+                           [(ngModel)]="criteria.power" id="powerEquals" name="powerEquals"
+                           placeholder="{{ 'transformersApp.transformer.search.power' | translate }}">
+                    <button class="input-group-addon btn btn-info" (click)="search(criteria)">
+                        <span class="fa fa-search"></span>
+                    </button>
+                    <button class="input-group-addon btn btn-danger" (click)="clear(criteria)" *ngIf="criteria.areSet()">
+                        <span class="fa fa-trash-o"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+   
     <br/>
     <div class="table-responsive" *ngIf="transformers">
         <table class="table table-striped">
